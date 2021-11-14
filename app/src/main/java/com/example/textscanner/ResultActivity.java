@@ -16,7 +16,7 @@ public class ResultActivity extends AppCompatActivity {
 
         result=findViewById(R.id.detected_text);
         Intent intent = getIntent();
-        message = intent.getStringExtra("nom");
+        message = intent.getStringExtra("detectedText");
         result.setText(message);
 
     }
