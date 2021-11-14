@@ -14,6 +14,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.vision.Frame;
@@ -30,6 +31,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 1;
+    Button take_photo;
     private Uri imageUri;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -39,22 +41,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        findViewById(R.id.take_a_photo).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String filename = System.currentTimeMillis() + ".jpg";
+        take_photo=findViewById(R.id.take_a_photo);
+    }
+    public void take_a_photo(View view) {
+        String filename = System.currentTimeMillis() + ".jpg";
 
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.TITLE, filename);
-                values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, filename);
+        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+        imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
 
-                Intent intent = new Intent();
-                intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, REQUEST_CAMERA);
-            }
-        });
+        Intent intent = new Intent();
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+
+    public void gallery(View view) {
     }
 
     @Override
@@ -108,8 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     detectedText.append("\n");
                 }
             }
-
-            //get your text here
+            Intent intent = new Intent(MainActivity.this,ResultActivity.class);
+            intent.putExtra("detectedText" , (CharSequence) detectedText);
+            startActivity(intent);
         }
         finally {
             textRecognizer.release();
@@ -143,6 +147,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void gallery(View view) {
-    }
+
+
 }
