@@ -14,4 +14,10 @@
         android:layout_margin="10dp"
         android:id="@+id/detected_text"
         android:text="Result" />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="copy text"
+        android:onClick="copyToClipBoard"
+        android:id="@+id/copy"></Button>
 </LinearLayout>
