@@ -33,4 +33,7 @@ public class ResultActivity extends AppCompatActivity {
         Toast.makeText(ResultActivity.this,"Copied to ClipBoard",Toast.LENGTH_LONG).show();
 
     }
+
+    public void returnToMainActivity(View view) {
+    }
 }

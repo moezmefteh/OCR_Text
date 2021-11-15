@@ -1,10 +1,13 @@
 package com.example.textscanner;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -15,7 +18,9 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.text.TextBlock;
@@ -32,6 +37,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 1;
     private static final int REQUEST_GALLERY = 0;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
+
     Button take_photo;
     Button gall;
     private Uri imageUri;
@@ -42,9 +49,46 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        checkForCameraPermission();
 
         take_photo=findViewById(R.id.take_a_photo);
         gall = findViewById(R.id.gallery);
+    }
+    private void checkForCameraPermission() {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, getString(R.string.permission_not_granted));
+            // Permission not yet granted. Use requestPermissions().
+            // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
+            // app-defined int constant. The callback method gets the
+            // result of the request.
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+        } else {
+            // Permission already granted. Enable the call button.
+            enableCameraButton();
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
+        // Check if permission is granted or not for the request.
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                if (permissions[0].equalsIgnoreCase(Manifest.permission.CAMERA)
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted. Enable call button.
+                    enableCameraButton();
+                } else {
+                    // Permission denied.
+                    Log.d(TAG, getString(R.string.failure_permission));
+                    Toast.makeText(this, getString(R.string.failure_permission),
+                            Toast.LENGTH_LONG).show();
+                    // Disable the call button.
+                    disableCameraButton();
+                }
+            }
+        }
     }
     public void take_a_photo(View view) {
         String filename = System.currentTimeMillis() + ".jpg";
@@ -58,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, REQUEST_CAMERA);
+    }
+    private void enableCameraButton() {
+        take_photo.setVisibility(View.VISIBLE);
+    }
+    private void disableCameraButton() {
+        take_photo.setVisibility(View.INVISIBLE);
+
     }
 
     public void gallery(View view) {

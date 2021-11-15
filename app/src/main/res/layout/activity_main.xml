@@ -21,7 +21,8 @@
         android:paddingStart="15dp"
         android:text="@string/take_a_photo"
         android:textColor="#29395e"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+       />
 
     <Button
         android:id="@+id/gallery"

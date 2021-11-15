@@ -4,4 +4,6 @@
     <string name="pic_from_gallery">Gallery</string>
     <string name="description">MB-Text Scanner is app to recognize any text from an image with 98% to 100% accurancy.
         It turns your mobile phone to text scanner.</string>
+    <string name="permission_not_granted">permission not granted</string>
+    <string name="failure_permission">Failure to obtain permission!</string>
 </resources>
