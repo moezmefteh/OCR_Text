@@ -31,7 +31,9 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_CAMERA = 1;
+    private static final int REQUEST_GALLERY = 0;
     Button take_photo;
+    Button gall;
     private Uri imageUri;
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         take_photo=findViewById(R.id.take_a_photo);
+        gall = findViewById(R.id.gallery);
     }
     public void take_a_photo(View view) {
         String filename = System.currentTimeMillis() + ".jpg";
@@ -58,6 +61,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void gallery(View view) {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_GALLERY);
     }
 
     @Override
@@ -68,6 +75,11 @@ public class MainActivity extends AppCompatActivity {
                     if (imageUri != null) {
                         inspect(imageUri);
                     }
+                }
+                break;
+            case REQUEST_GALLERY:
+                if (resultCode == RESULT_OK) {
+                    inspect(data.getData());
                 }
                 break;
             default:
