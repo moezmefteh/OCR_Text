@@ -49,24 +49,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        checkForCameraPermission();
 
         take_photo=findViewById(R.id.take_a_photo);
         gall = findViewById(R.id.gallery);
+        checkForCameraPermission();
+
     }
     private void checkForCameraPermission() {
+
+        System.out.println();
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             Log.d(TAG, getString(R.string.permission_not_granted));
-            // Permission not yet granted. Use requestPermissions().
-            // MY_PERMISSIONS_REQUEST_CALL_PHONE is an
-            // app-defined int constant. The callback method gets the
-            // result of the request.
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.CAMERA},
                     MY_PERMISSIONS_REQUEST_CAMERA);
         } else {
-            // Permission already granted. Enable the call button.
             enableCameraButton();
         }
     }
@@ -77,19 +75,26 @@ public class MainActivity extends AppCompatActivity {
             case MY_PERMISSIONS_REQUEST_CAMERA: {
                 if (permissions[0].equalsIgnoreCase(Manifest.permission.CAMERA)
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission was granted. Enable call button.
                     enableCameraButton();
                 } else {
-                    // Permission denied.
                     Log.d(TAG, getString(R.string.failure_permission));
                     Toast.makeText(this, getString(R.string.failure_permission),
                             Toast.LENGTH_LONG).show();
-                    // Disable the call button.
                     disableCameraButton();
                 }
             }
         }
     }
+    private void enableCameraButton() {
+        take_photo.setVisibility(View.VISIBLE);
+        gall.setVisibility(View.VISIBLE);
+    }
+    private void disableCameraButton() {
+        take_photo.setVisibility(View.INVISIBLE);
+        gall.setVisibility(View.INVISIBLE);
+
+    }
+
     public void take_a_photo(View view) {
         String filename = System.currentTimeMillis() + ".jpg";
 
@@ -103,13 +108,7 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
-    private void enableCameraButton() {
-        take_photo.setVisibility(View.VISIBLE);
-    }
-    private void disableCameraButton() {
-        take_photo.setVisibility(View.INVISIBLE);
 
-    }
 
     public void gallery(View view) {
         Intent intent = new Intent();

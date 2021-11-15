@@ -35,5 +35,7 @@ public class ResultActivity extends AppCompatActivity {
     }
 
     public void returnToMainActivity(View view) {
+        Intent intent = new Intent(ResultActivity.this,MainActivity.class);
+        startActivity(intent);
     }
 }
